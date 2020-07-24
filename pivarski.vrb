@@ -1,0 +1,29 @@
+\frametitle {Implementing the cut}
+
+{\bf Method 1:}
+
+\begin{verbatim}
+int stripnumber = cscGeometry->layer(layerId)->geometry()
+  ->nearestStrip(LocalPoint(segMatch->x, segMatch->y, 0.));
+long channel = chamberId.rawId()*16 + ((strip-1) % 16);
+\end{verbatim}
+
+\vspace{-0.2 cm}
+and make sure the two muons don't share a ``channel''.
+
+\vfill
+{\bf Method 2:}
+\begin{verbatim}
+const Surface &s = cscGeometry->idToDet(chamberId)->surface();
+GlobalPoint point =
+  s.toGlobal(LocalPoint(segMatch->x, segMatch->y, 0.));
+GlobalVector direction =
+  s.toGlobal(LocalVector(segMatch->dXdZ, segMatch->dYdZ, 1.));
+\end{verbatim}
+
+\vspace{-0.2 cm}
+linearly extrapolate to a common $z$-plane (e.g.\ 602.3 cm), and make
+sure they don't overlap with a small tolerance (plots on previous page).
+
+\vfill
+Both methods require access to CSCGeometry.
